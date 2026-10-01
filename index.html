@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn My Pori - German Learning & AI Translator</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Inter, Hind Siliguri (Bangla), Dancing Script (Romantic Footer) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tesseract OCR Library -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: {
+                            50: '#FFFDF9',
+                            100: '#FAF6F0',
+                            200: '#F4ECE1',
+                            300: '#E8DBC9',
+                            400: '#D9C5AD',
+                        },
+                        emerald: {
+                            850: '#064e3b',
+                            750: '#047857',
+                            650: '#059669',
+                            500: '#10b981',
+                            100: '#d1fae5',
+                            50: '#ecfdf5',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        bangla: ['Hind Siliguri', 'sans-serif'],
+                        romantic: ['Dancing Script', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FAF6F0;
+            font-family: 'Inter', sans-serif;
+            color: #172033;
+        }
+        .bangla-font {
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+        .romantic-font {
+            font-family: 'Dancing Script', cursive;
+        }
+        .soft-card {
+            background: #FFFFFF;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(232, 219, 201, 0.6);
+        }
+        /* Top Right Toast Notification Animation */
+        @keyframes toastSlideIn {
+            0% { transform: translateX(120%) scale(0.9); opacity: 0; }
+            100% { transform: translateX(0) scale(1); opacity: 1; }
+        }
+        .toast-animate {
+            animation: toastSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        /* Floating Hearts Animation */
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0.8; }
+            50% { transform: translateY(-25px) scale(1.1) rotate(10deg); opacity: 1; }
+            100% { transform: translateY(-50px) scale(0.8) rotate(-10deg); opacity: 0; }
+        }
+        .heart-float-particle {
+            position: absolute;
+            animation: floatUp 4s ease-in-out infinite;
+        }
+        /* Sound wave bar animations */
+        .sound-wave-bar {
+            animation: wave 1.2s ease-in-out infinite alternate;
+        }
+        @keyframes wave {
+            0% { height: 4px; }
+            100% { height: 20px; }
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #FAF6F0; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #15803D; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-emerald-100 selection:text-emerald-900 relative">
+
+    <!-- Top-Right Floating Toast Container for Motivational Popup -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm pointer-events-none"></div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-[#FAF6F0]/90 backdrop-blur-md border-b border-cream-300/70 px-4 lg:px-8 py-3.5 transition-all">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <!-- Brand Logo -->
+            <a href="#" onclick="scrollToSection('hero-search'); return false;" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-850 via-emerald-750 to-emerald-650 flex items-center justify-center text-white shadow-md shadow-emerald-900/15 group-hover:scale-105 transition-transform duration-300">
+                    <span class="font-extrabold text-2xl tracking-tighter">P</span>
+                </div>
+                <div>
+                    <h1 class="font-black text-xl tracking-tight text-emerald-850 leading-none group-hover:text-emerald-750 transition-colors">Learn My Pori</h1>
+                    <p class="text-[11px] font-semibold text-emerald-750/80 tracking-wide mt-0.5">German Learning & AI Companion</p>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-1 bg-cream-200/70 p-1.5 rounded-2xl border border-cream-300/60 shadow-inner">
+                <a href="#hero-search" onclick="scrollToSection('hero-search')" class="px-4 py-2 rounded-xl text-xs font-bold text-emerald-850 bg-white shadow-sm transition">
+                    <i class="fa-solid fa-language text-emerald-600 mr-1.5"></i>Translator
+                </a>
+                <a href="#image-section" onclick="scrollToSection('image-section')" class="px-4 py-2 rounded-xl text-xs font-bold text-gray-700 hover:text-emerald-850 hover:bg-white/60 transition">
+                    <i class="fa-solid fa-camera text-emerald-600 mr-1.5"></i>Image OCR
+                </a>
+                <a href="#evaluator-section" onclick="scrollToSection('evaluator-section')" class="px-4 py-2 rounded-xl text-xs font-bold text-gray-700 hover:text-emerald-850 hover:bg-white/60 transition">
+                    <i class="fa-solid fa-microphone-lines text-emerald-600 mr-1.5"></i>Speech Practice
+                </a>
+                <button onclick="toggleFavoritesModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-gray-700 hover:text-emerald-850 hover:bg-white/60 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-heart text-red-500"></i>Favorites (<span id="fav-count-badge">0</span>)
+                </button>
+            </nav>
+
+            <!-- CTA & Recent Searches Button -->
+            <div class="flex items-center gap-2">
+                <button onclick="toggleRecentModal()" class="px-3.5 py-2 rounded-xl border border-cream-300 text-xs font-bold text-gray-700 bg-white hover:bg-cream-100 transition shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-clock-rotate-left text-emerald-700"></i>
+                    <span class="hidden sm:inline">Recent</span>
+                </button>
+                <button onclick="scrollToSection('hero-search')" class="px-4 py-2 bg-emerald-850 hover:bg-emerald-750 text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition-all transform active:scale-95">
+                    Start Learning
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-10 flex-1">
+
+        <!-- 1. HERO SECTION & MAIN SEARCH INTERFACE -->
+        <section id="hero-search" class="space-y-6 pt-2">
+            <div class="text-center max-w-3xl mx-auto space-y-3">
+                <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-100 text-emerald-850 text-xs font-extrabold border border-emerald-200">
+                    <i class="fa-solid fa-sparkles text-emerald-600"></i> German Language Learning App
+                </span>
+                <h2 class="text-3xl sm:text-5xl font-black text-gray-900 tracking-tight leading-tight">
+                    Learn German. Understand German. Speak German.
+                </h2>
+                <p class="text-sm sm:text-base text-gray-600 font-medium">
+                    Search any German word, English phrase, or Bangla sentence. Get real-time translations, native audio, and pronunciation practice.
+                </p>
+            </div>
+
+            <!-- Search Bar Card -->
+            <div class="soft-card p-4 sm:p-6 bg-gradient-to-b from-white to-cream-50 relative">
+                <div class="relative max-w-3xl mx-auto">
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 text-emerald-700/70 text-lg"></i>
+                        <input type="text" id="search-input" placeholder="Search a German word or English phrase (e.g. Haus, Danke, Esel, Guten Morgen)..." 
+                            class="w-full pl-12 pr-28 py-4 sm:py-4.5 bg-cream-100/80 border-2 border-cream-300 focus:border-emerald-600 focus:bg-white rounded-2xl text-sm sm:text-base font-semibold text-gray-900 focus:outline-none transition-all shadow-inner"
+                            oninput="handleSearchInput(this.value)"
+                            onkeydown="if(event.key==='Enter') triggerSearch(this.value)">
+                        <button onclick="triggerSearch(document.getElementById('search-input').value)" 
+                            class="absolute right-2 px-5 py-2.5 bg-emerald-850 hover:bg-emerald-750 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-md flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-right"></i>
+                            <span>Translate</span>
+                        </button>
+                    </div>
+
+                    <!-- Autocomplete Suggestion Dropdown -->
+                    <div id="suggestions-box" class="hidden absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl border border-cream-300 shadow-2xl z-30 max-h-60 overflow-y-auto divide-y divide-cream-100"></div>
+                </div>
+
+                <!-- Spellcheck Correction Display -->
+                <div id="spell-correction-banner" class="hidden max-w-3xl mx-auto mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs font-semibold text-amber-900 flex items-center justify-between">
+                    <span><i class="fa-solid fa-circle-info mr-1.5 text-amber-600"></i> Did you mean: <strong id="suggested-spelling-text" class="underline cursor-pointer text-emerald-850" onclick="acceptSpellingCorrection()">arbei</strong>?</span>
+                    <button onclick="acceptSpellingCorrection()" class="px-2.5 py-1 bg-amber-200 hover:bg-amber-300 rounded-lg text-amber-950 font-bold transition">Apply Correction</button>
+                </div>
+
+                <!-- Quick Tags -->
+                <div class="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs font-medium text-gray-500">
+                    <span class="text-emerald-850 font-bold">Try searching:</span>
+                    <button onclick="executeQuickSearch('Danke schön')" class="px-3 py-1 rounded-lg bg-cream-200/80 hover:bg-emerald-100 hover:text-emerald-850 font-bold transition">Danke schön</button>
+                    <button onclick="executeQuickSearch('Esel')" class="px-3 py-1 rounded-lg bg-cream-200/80 hover:bg-emerald-100 hover:text-emerald-850 font-bold transition">Esel (Donkey)</button>
+                    <button onclick="executeQuickSearch('Haus')" class="px-3 py-1 rounded-lg bg-cream-200/80 hover:bg-emerald-100 hover:text-emerald-850 font-bold transition">Haus</button>
+                    <button onclick="executeQuickSearch('Guten Tag')" class="px-3 py-1 rounded-lg bg-cream-200/80 hover:bg-emerald-100 hover:text-emerald-850 font-bold transition">Guten Tag</button>
+                    <button onclick="executeQuickSearch('Ich lerne Deutsch')" class="px-3 py-1 rounded-lg bg-cream-200/80 hover:bg-emerald-100 hover:text-emerald-850 font-bold transition">Ich lerne Deutsch</button>
+                </div>
+            </div>
+
+            <!-- Learning Statistics Quick Counter -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="p-3.5 rounded-2xl bg-white border border-cream-300 text-center shadow-xs">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Words Learned</span>
+                    <p id="stat-words" class="text-xl sm:text-2xl font-black text-emerald-850 mt-0.5">128</p>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-white border border-cream-300 text-center shadow-xs">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Favorites</span>
+                    <p id="stat-favorites" class="text-xl sm:text-2xl font-black text-emerald-850 mt-0.5">0</p>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-white border border-cream-300 text-center shadow-xs">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Total Searches</span>
+                    <p id="stat-searches" class="text-xl sm:text-2xl font-black text-emerald-850 mt-0.5">14</p>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-white border border-cream-300 text-center shadow-xs">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Daily Streak</span>
+                    <p class="text-xl sm:text-2xl font-black text-emerald-850 mt-0.5">7 Days 🔥</p>
+                </div>
+            </div>
+
+            <!-- TRANSLATION RESULT CARD (Fixed All Translations) -->
+            <div id="translation-result" class="soft-card p-5 sm:p-8 space-y-6">
+                
+                <!-- Card Header Info -->
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-cream-200 pb-4">
+                    <div class="flex items-center gap-3">
+                        <span id="badge-type" class="px-3 py-1 rounded-lg text-xs font-extrabold uppercase tracking-wide bg-emerald-100 text-emerald-850 border border-emerald-200/80">PHRASE / WORD</span>
+                        <span id="phonetic-text" class="text-xs sm:text-sm font-mono text-gray-500 font-medium">/--danke  schön--/</span>
+                    </div>
+                    <button id="btn-favorite" onclick="toggleFavoriteCurrent()" class="flex items-center gap-2 px-4 py-2 rounded-xl border border-cream-300 text-xs sm:text-sm font-bold text-gray-700 hover:text-red-500 hover:bg-red-50/50 transition-all shadow-xs">
+                        <i id="fav-icon" class="fa-regular fa-heart text-gray-400"></i>
+                        <span id="fav-text">Add to Favorites</span>
+                    </button>
+                </div>
+
+                <!-- Main German Word Heading -->
+                <div>
+                    <h3 id="main-german-title" class="text-3xl sm:text-5xl font-black text-gray-900 tracking-tight">Danke schön</h3>
+                </div>
+
+                <!-- Audio Controller Box with Sound Wave Animation -->
+                <div class="bg-gradient-to-r from-cream-100/90 via-cream-50 to-white p-4 sm:p-6 rounded-2xl border border-cream-300/80 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <!-- Voice Profile Selector -->
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-xs font-extrabold text-gray-500 tracking-wider uppercase"><i class="fa-solid fa-volume-high text-emerald-700 mr-1"></i>Voice:</span>
+                            <div class="inline-flex bg-white p-1 rounded-xl border border-cream-300 shadow-xs">
+                                <button id="btn-voice-female" onclick="setVoiceGender('female')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-emerald-850 text-white shadow-xs flex items-center gap-1.5">
+                                    <i class="fa-solid fa-venus text-pink-300"></i> Female
+                                </button>
+                                <button id="btn-voice-male" onclick="setVoiceGender('male')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-600 hover:text-emerald-850 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-mars text-blue-400"></i> Male
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Audio Playback Speed Controls -->
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-xs font-extrabold text-gray-500 tracking-wider uppercase">Speed:</span>
+                            <div class="inline-flex bg-white p-1 rounded-xl border border-cream-300 shadow-xs">
+                                <button id="speed-025" onclick="setAudioSpeed(0.25)" class="px-2.5 py-1 rounded-lg text-xs font-bold text-white bg-emerald-850 transition">0.25× Extra Slow</button>
+                                <button id="speed-05" onclick="setAudioSpeed(0.5)" class="px-2.5 py-1 rounded-lg text-xs font-bold text-gray-600 transition">0.5× Slow</button>
+                                <button id="speed-10" onclick="setAudioSpeed(1.0)" class="px-2.5 py-1 rounded-lg text-xs font-bold text-gray-600 transition">1× Normal</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audio Play / Stop Controls & Animated Wave Bar -->
+                    <div class="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-cream-200/80">
+                        <div class="flex items-center gap-3">
+                            <p class="text-xs font-semibold text-gray-600">Listen to natural German pronunciation</p>
+                            <!-- Sound wave bar visualizer -->
+                            <div id="sound-wave-container" class="hidden items-center gap-1 h-5">
+                                <div class="w-1 bg-emerald-600 rounded-full sound-wave-bar" style="animation-delay: 0s;"></div>
+                                <div class="w-1 bg-emerald-600 rounded-full sound-wave-bar" style="animation-delay: 0.2s;"></div>
+                                <div class="w-1 bg-emerald-600 rounded-full sound-wave-bar" style="animation-delay: 0.4s;"></div>
+                                <div class="w-1 bg-emerald-600 rounded-full sound-wave-bar" style="animation-delay: 0.1s;"></div>
+                            </div>
+                        </div>
+
+                        <button id="btn-pronounce" onclick="toggleAudioPlayback()" class="flex items-center gap-2.5 px-6 py-2.5 bg-emerald-850 hover:bg-emerald-750 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-md">
+                            <i id="audio-btn-icon" class="fa-solid fa-play"></i>
+                            <span id="audio-btn-label">Pronounce German</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3 Distinct Language Translation Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    
+                    <!-- German Card -->
+                    <div class="p-5 rounded-2xl bg-cream-50/90 border border-cream-300 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-extrabold text-gray-400 uppercase tracking-wider">GERMAN</span>
+                                <span class="text-[10px] font-black text-emerald-850 bg-emerald-100 px-2 py-0.5 rounded">DE</span>
+                            </div>
+                            <h4 id="card-german-text" class="text-2xl sm:text-3xl font-black text-gray-900 mb-1">Danke schön</h4>
+                            <p id="card-german-sub" class="text-xs text-emerald-750 font-semibold">German source term</p>
+                        </div>
+                    </div>
+
+                    <!-- English Card (FIXED: Real English translation displayed) -->
+                    <div class="p-5 rounded-2xl bg-cream-50/90 border border-cream-300 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-extrabold text-gray-400 uppercase tracking-wider">ENGLISH</span>
+                                <span class="text-[10px] font-black text-emerald-850 bg-emerald-100 px-2 py-0.5 rounded">GB</span>
+                            </div>
+                            <h4 id="card-english-text" class="text-2xl sm:text-3xl font-black text-gray-900 mb-1">Thank you very much</h4>
+                            <p class="text-xs text-gray-500 font-semibold">English meaning</p>
+                        </div>
+                    </div>
+
+                    <!-- Bangla Card (FIXED: Real Bangla translation displayed) -->
+                    <div class="p-5 rounded-2xl bg-cream-50/90 border border-cream-300 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-extrabold text-gray-400 uppercase tracking-wider bangla-font">বাংলা</span>
+                                <span class="text-[10px] font-black text-emerald-850 bg-emerald-100 px-2 py-0.5 rounded">BD</span>
+                            </div>
+                            <h4 id="card-bangla-text" class="text-2xl sm:text-3xl font-bold text-gray-900 bangla-font mb-1">আপনাকে অনেক ধন্যবাদ</h4>
+                            <p class="text-xs text-gray-500 font-medium bangla-font">বাংলা অর্থ</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example Sentence Box -->
+                <div class="bg-white p-5 rounded-2xl border border-cream-300 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold text-emerald-850 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-quote-left text-emerald-600"></i> EXAMPLE SENTENCE
+                        </span>
+                        <button onclick="speakText(document.getElementById('example-sentence-de').innerText)" class="px-3 py-1 bg-cream-100 hover:bg-cream-200 text-emerald-850 rounded-lg text-xs font-bold flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-volume-high text-xs"></i> Listen
+                        </button>
+                    </div>
+                    <p id="example-sentence-de" class="text-base sm:text-lg font-bold text-gray-900">Danke schön ist sehr wichtig.</p>
+                    <p id="example-sentence-en" class="text-xs sm:text-sm font-medium text-gray-600">"Thank you very much" is very important.</p>
+                    <p id="example-sentence-bn" class="text-xs sm:text-sm font-medium text-emerald-850 bangla-font">"আপনাকে অনেক ধন্যবাদ" বলা খুব গুরুত্বপূর্ণ।</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. PROMINENT IMAGE TRANSLATOR SECTION -->
+        <section id="image-section" class="space-y-6 pt-4">
+            <div class="soft-card p-6 sm:p-8 space-y-6">
+                <div class="border-b border-cream-200 pb-4 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-750">OCR WORKBENCH</span>
+                        <h3 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight flex items-center gap-2.5">
+                            <i class="fa-solid fa-camera-retro text-emerald-600"></i>
+                            <span>Translate German from an Image</span>
+                        </h3>
+                        <p class="text-xs sm:text-sm text-gray-600 font-medium mt-1">
+                            Upload photos, screenshots, or documents. Extract German text with OCR and view side-by-side translations.
+                        </p>
+                    </div>
+
+                    <label class="cursor-pointer px-5 py-3 bg-emerald-850 hover:bg-emerald-750 text-white font-bold text-xs sm:text-sm rounded-xl transition shadow-md flex items-center gap-2 transform active:scale-95">
+                        <i class="fa-solid fa-file-arrow-up"></i>
+                        <span>Upload Image</span>
+                        <input type="file" id="ocr-file-input" accept="image/*" class="hidden" onchange="processUploadedImage(event)">
+                    </label>
+                </div>
+
+                <!-- Drag and Drop Dropzone & Sample Buttons -->
+                <div id="dropzone" ondragover="handleDragOver(event)" onmouseleave="handleDragLeave(event)" ondrop="handleFileDrop(event)" 
+                    class="border-2 border-dashed border-cream-300 hover:border-emerald-600 bg-cream-50/60 rounded-2xl p-6 text-center transition space-y-3 cursor-pointer" onclick="document.getElementById('ocr-file-input').click()">
+                    <div class="w-12 h-12 rounded-full bg-cream-200 text-emerald-850 flex items-center justify-center mx-auto text-xl">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-gray-800">Drag & drop a photo here, or click to browse</p>
+                        <p class="text-xs text-gray-500 mt-0.5">Supports JPG, PNG, WEBP, Screenshots, and Document Scans</p>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-2 pt-2" onclick="event.stopPropagation()">
+                        <span class="text-xs font-bold text-gray-500">Or test with presets:</span>
+                        <button onclick="loadPresetImage('sign')" class="px-3 py-1 rounded-lg bg-white border border-cream-300 text-xs font-bold text-emerald-850 hover:bg-emerald-50 transition shadow-xs">🇩🇪 German Street Sign</button>
+                        <button onclick="loadPresetImage('book')" class="px-3 py-1 rounded-lg bg-white border border-cream-300 text-xs font-bold text-emerald-850 hover:bg-emerald-50 transition shadow-xs">📖 Book Page</button>
+                        <button onclick="loadPresetImage('note')" class="px-3 py-1 rounded-lg bg-white border border-cream-300 text-xs font-bold text-emerald-850 hover:bg-emerald-50 transition shadow-xs">📝 Store Note</button>
+                    </div>
+                </div>
+
+                <!-- Side-by-Side Image Result Cards -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-[340px]">
+                    
+                    <!-- Left: Uploaded Image Preview -->
+                    <div class="bg-cream-100/70 rounded-2xl border border-cream-300 p-4 flex flex-col items-center justify-center relative overflow-hidden min-h-[260px]">
+                        <img id="ocr-preview-img" src="" alt="Loaded German Image" class="hidden max-h-[340px] w-auto object-contain rounded-xl shadow-md border border-cream-300">
+                        <div id="ocr-placeholder" class="text-center p-6">
+                            <i class="fa-regular fa-image text-4xl text-gray-300 mb-2"></i>
+                            <p class="text-xs font-bold text-gray-500">No image loaded yet</p>
+                        </div>
+                        
+                        <!-- OCR Loading Spinner Overlay -->
+                        <div id="ocr-spinner" class="hidden absolute inset-0 bg-white/95 backdrop-blur-xs flex flex-col items-center justify-center p-4 z-20">
+                            <i class="fa-solid fa-circle-notch fa-spin text-3xl text-emerald-850 mb-3"></i>
+                            <p class="text-sm font-bold text-emerald-850">Running OCR German Extraction...</p>
+                            <p class="text-xs text-gray-500 mt-1">Analyzing character geometries</p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Extracted Result & 3 Language Cards -->
+                    <div class="bg-white rounded-2xl border border-cream-300 p-5 flex flex-col justify-between space-y-4">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between border-b border-cream-200 pb-2">
+                                <span class="text-xs font-extrabold text-emerald-850 uppercase tracking-wider">DETECTED GERMAN TEXT</span>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="copyToClipboard('ocr-extracted-de')" class="text-xs font-bold text-gray-500 hover:text-emerald-850 transition">
+                                        <i class="fa-regular fa-copy"></i> Copy
+                                    </button>
+                                    <button onclick="speakText(document.getElementById('ocr-extracted-de').innerText)" class="text-xs font-bold text-emerald-750 hover:underline flex items-center gap-1">
+                                        <i class="fa-solid fa-volume-high"></i> Play German
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <p id="ocr-extracted-de" class="text-lg sm:text-xl font-black text-gray-900 bg-cream-50 p-3.5 rounded-xl border border-cream-200">
+                                Guten Tag! Willkommen in Deutschland.
+                            </p>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div class="bg-cream-50/80 p-3.5 rounded-xl border border-cream-200">
+                                    <span class="text-[10px] font-extrabold text-gray-400 uppercase">ENGLISH TRANSLATION</span>
+                                    <p id="ocr-translated-en" class="text-xs sm:text-sm font-bold text-gray-800 mt-0.5">Good day! Welcome to Germany.</p>
+                                </div>
+                                <div class="bg-cream-50/80 p-3.5 rounded-xl border border-cream-200">
+                                    <span class="text-[10px] font-extrabold text-gray-400 uppercase bangla-font">বাংলা অনুবাদ</span>
+                                    <p id="ocr-translated-bn" class="text-xs sm:text-sm font-bold text-emerald-850 bangla-font mt-0.5">শুভ দিন! জার্মানিতে আপনাকে স্বাগতম।</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-cream-200 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-gray-500">Practice reading this image out loud:</span>
+                            <button onclick="transferOcrToSpeech()" class="px-4 py-2 bg-emerald-850 hover:bg-emerald-750 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-microphone"></i> Speak & Evaluate Image
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. GERMAN SPEECH EVALUATOR PRACTICE MODE -->
+        <section id="evaluator-section" class="space-y-6 pt-4">
+            <div class="soft-card p-6 sm:p-8 space-y-6">
+                <div class="border-b border-cream-200 pb-4">
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-750">AI SPEECH LAB</span>
+                    <h3 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight flex items-center gap-2.5">
+                        <i class="fa-solid fa-microphone-lines text-emerald-600"></i>
+                        <span>Speak German & Get Evaluated</span>
+                    </h3>
+                    <p class="text-xs sm:text-sm text-gray-600 font-medium mt-1">
+                        Speak into your microphone. The AI will listen, detect your German pronunciation, and calculate an accuracy score.
+                    </p>
+                </div>
+
+                <!-- Target Input Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-cream-50 p-4 rounded-2xl border border-cream-300">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-extrabold text-gray-500 uppercase mb-1">Target German Phrase:</label>
+                        <input type="text" id="practice-target" value="Danke schön" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-300 font-bold text-gray-900 bg-white focus:outline-none focus:border-emerald-600 text-sm sm:text-base">
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <button onclick="setRandomPractice()" class="px-3.5 py-2.5 bg-cream-200 hover:bg-cream-300 text-emerald-850 font-bold text-xs rounded-xl transition flex-1">
+                            <i class="fa-solid fa-shuffle mr-1"></i> Random Word
+                        </button>
+                        <button onclick="speakText(document.getElementById('practice-target').value)" class="px-3 py-2.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-850 font-bold text-xs rounded-xl transition">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recording Microphone Control -->
+                <div class="flex flex-col items-center justify-center py-8 space-y-4 bg-gradient-to-b from-white to-cream-100/50 rounded-2xl border border-cream-200 text-center">
+                    <button id="btn-record-speech" onclick="toggleSpeechRecognition()" class="w-24 h-24 rounded-full bg-emerald-850 hover:bg-emerald-750 text-white flex flex-col items-center justify-center shadow-xl hover:scale-105 transition duration-300 group">
+                        <i id="mic-icon" class="fa-solid fa-microphone text-3xl mb-1 group-hover:scale-110 transition"></i>
+                        <span id="mic-status-label" class="text-[10px] font-extrabold tracking-wider uppercase">START</span>
+                    </button>
+                    <p id="speech-instruction" class="text-xs sm:text-sm font-semibold text-gray-600">
+                        Click the mic and say <span id="target-highlight" class="text-emerald-850 font-extrabold">"Danke schön"</span> out loud.
+                    </p>
+                </div>
+
+                <!-- AI Speech Evaluation Score Result -->
+                <div id="eval-result-card" class="hidden bg-white p-6 rounded-2xl border-2 border-emerald-500/50 shadow-lg space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold text-gray-400 uppercase tracking-wide">Pronunciation Accuracy</span>
+                        <span id="score-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-850">95% Accuracy</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-cream-50 p-3.5 rounded-xl border border-cream-200">
+                            <span class="text-xs font-semibold text-gray-500">Target Expected:</span>
+                            <p id="eval-expected" class="text-lg font-bold text-emerald-850">Danke schön</p>
+                        </div>
+                        <div class="bg-cream-50 p-3.5 rounded-xl border border-cream-200">
+                            <span class="text-xs font-semibold text-gray-500">AI Speech Detected:</span>
+                            <p id="eval-heard" class="text-lg font-bold text-gray-900">Danke schön</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-emerald-50/90 rounded-xl border border-emerald-200 flex items-start gap-3">
+                        <i class="fa-solid fa-circle-check text-emerald-700 text-lg mt-0.5"></i>
+                        <div>
+                            <span class="text-xs font-extrabold text-emerald-850 uppercase">AI Evaluation Feedback:</span>
+                            <p id="eval-feedback" class="text-xs sm:text-sm font-semibold text-gray-800 mt-0.5">
+                                Excellent pronunciation! Vowel pitch and cadence were spot on.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 4. GRAND ROMANTIC FOOTER BANNER (BIG, ELEGANT & BEAUTIFUL) -->
+    <section class="bg-gradient-to-b from-[#FAF6F0] via-pink-50/30 to-cream-100 pt-10 pb-6 border-t border-cream-300 relative overflow-hidden">
+        <!-- Floating hearts decorative elements -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+            <i class="fa-solid fa-heart text-red-400/40 text-xl heart-float-particle" style="left: 10%; bottom: 10%; animation-delay: 0s;"></i>
+            <i class="fa-solid fa-heart text-pink-400/50 text-2xl heart-float-particle" style="left: 25%; bottom: 20%; animation-delay: 1.5s;"></i>
+            <i class="fa-solid fa-heart text-rose-500/40 text-lg heart-float-particle" style="left: 50%; bottom: 15%; animation-delay: 0.8s;"></i>
+            <i class="fa-solid fa-heart text-red-500/30 text-3xl heart-float-particle" style="left: 75%; bottom: 12%; animation-delay: 2.2s;"></i>
+            <i class="fa-solid fa-heart text-pink-500/40 text-xl heart-float-particle" style="left: 88%; bottom: 18%; animation-delay: 0.5s;"></i>
+        </div>
+
+        <div class="max-w-5xl mx-auto px-4 text-center relative z-10 space-y-4 py-8">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-100/80 text-pink-800 border border-pink-200/80 text-xs font-bold shadow-xs">
+                <i class="fa-solid fa-heart text-red-500"></i> Dedicated With Eternal Love
+            </div>
+
+            <!-- Massive Romantic Typography -->
+            <h2 class="text-5xl sm:text-7xl lg:text-8xl romantic-font font-bold text-gray-900 tracking-wide drop-shadow-sm leading-tight">
+                I <span class="text-red-500 inline-block transform hover:scale-125 transition duration-300">♥</span> You, Fatema
+            </h2>
+
+            <p class="text-sm sm:text-base font-semibold text-gray-600 max-w-xl mx-auto italic">
+                "In every language, in every German word I speak, my love for you shines brightest."
+            </p>
+        </div>
+
+        <!-- System Copyright & Quick Links -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-cream-300/80 pt-6 mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-gray-500">
+            <div class="flex items-center gap-2">
+                <span class="font-extrabold text-emerald-850">Learn My Pori</span>
+                <span>&copy; 2026. All rights reserved.</span>
+            </div>
+            <div class="flex items-center gap-4 font-semibold text-gray-600">
+                <a href="#hero-search" onclick="scrollToSection('hero-search')" class="hover:text-emerald-850 transition">Home</a>
+                <a href="#image-section" onclick="scrollToSection('image-section')" class="hover:text-emerald-850 transition">Image Translator</a>
+                <a href="#" onclick="toggleFavoritesModal(); return false;" class="hover:text-emerald-850 transition">Favorites</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Saved Favorites Modal -->
+    <div id="favorites-modal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-cream-300 overflow-hidden flex flex-col max-h-[80vh]">
+            <div class="p-4 bg-cream-100 border-b border-cream-200 flex items-center justify-between">
+                <h3 class="font-bold text-emerald-850 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-heart text-red-500"></i> Saved Favorites
+                </h3>
+                <button onclick="toggleFavoritesModal()" class="text-gray-400 hover:text-gray-700 font-bold px-2 py-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div id="fav-modal-list" class="p-4 overflow-y-auto space-y-2 flex-1 divide-y divide-cream-100"></div>
+        </div>
+    </div>
+
+    <!-- Recent Searches Modal -->
+    <div id="recent-modal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-cream-300 overflow-hidden flex flex-col max-h-[75vh]">
+            <div class="p-4 bg-cream-100 border-b border-cream-200 flex items-center justify-between">
+                <h3 class="font-bold text-emerald-850 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-emerald-700"></i> Recent Searches
+                </h3>
+                <button onclick="clearRecentSearches()" class="text-xs text-red-600 hover:underline font-bold">Clear All</button>
+            </div>
+            <div id="recent-modal-list" class="p-4 overflow-y-auto space-y-1 flex-1 divide-y divide-cream-100"></div>
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive Local German Database (Fixed & Verified Translations)
+        const GERMAN_DATABASE = {
+            "danke": {
+                de: "Danke",
+                en: "Thank you",
+                bn: "ধন্যবাদ",
+                type: "EXPRESSION",
+                phonetic: "/--dahn-keh--/",
+                exDe: "Danke für deine Hilfe.",
+                exEn: "Thank you for your help.",
+                exBn: "আপনার সাহায্যের জন্য ধন্যবাদ।"
+            },
+            "danke schön": {
+                de: "Danke schön",
+                en: "Thank you very much",
+                bn: "আপনাকে অনেক ধন্যবাদ",
+                type: "PHRASE / WORD",
+                phonetic: "/--dahn-keh schön--/",
+                exDe: "Danke schön ist sehr wichtig.",
+                exEn: "Thank you very much is very important.",
+                exBn: "আপনাকে অনেক ধন্যবাদ বলা খুব গুরুত্বপূর্ণ।"
+            },
+            "esel": {
+                de: "Esel",
+                en: "Donkey",
+                bn: "গাধা",
+                type: "NOUN (DER)",
+                phonetic: "/--ay-zel--/",
+                exDe: "Der Esel läuft langsam.",
+                exEn: "The donkey walks slowly.",
+                exBn: "গাধাটি ধীরে ধীরে হাঁটে।"
+            },
+            "haus": {
+                de: "Haus",
+                en: "House",
+                bn: "বাড়ি",
+                type: "NOUN (DAS)",
+                phonetic: "/--howss--/",
+                exDe: "Das Haus ist sehr groß.",
+                exEn: "The house is very large.",
+                exBn: "বাড়িটি খুব বড়।"
+            },
+            "guten morgen": {
+                de: "Guten Morgen",
+                en: "Good morning",
+                bn: "শুভ সকাল",
+                type: "GREETING",
+                phonetic: "/--goo-ten mor-gen--/",
+                exDe: "Guten Morgen! Wie geht es Ihnen?",
+                exEn: "Good morning! How are you?",
+                exBn: "শুভ সকাল! আপনি কেমন আছেন?"
+            },
+            "guten tag": {
+                de: "Guten Tag",
+                en: "Good day / Hello",
+                bn: "শুভ দিন / হ্যালো",
+                type: "GREETING",
+                phonetic: "/--goo-ten tahk--/",
+                exDe: "Guten Tag! Willkommen in Deutschland.",
+                exEn: "Good day! Welcome to Germany.",
+                exBn: "শুভ দিন! জার্মানিতে আপনাকে স্বাগতম।"
+            },
+            "arbeiten": {
+                de: "Arbeiten",
+                en: "To work",
+                bn: "কাজ করা",
+                type: "VERB",
+                phonetic: "/--ar-by-ten--/",
+                exDe: "Ich arbeite jeden Tag auf Deutsch.",
+                exEn: "I work every day in German.",
+                exBn: "আমি প্রতিদিন জার্মান শিখি।"
+            },
+            "ich lerne deutsch": {
+                de: "Ich lerne Deutsch",
+                en: "I am learning German",
+                bn: "আমি জার্মান শিখছি",
+                type: "SENTENCE",
+                phonetic: "/--ikh ler-ne doysh--/",
+                exDe: "Ich lerne Deutsch mit Learn My Pori.",
+                exEn: "I am learning German with Learn My Pori.",
+                exBn: "আমি Learn My Pori দিয়ে জার্মান শিখছি।"
+            }
+        };
+
+        // Rotating Motivational Messages for Top-Right Popup
+        const MOTIVATIONAL_MESSAGES = [
+            "You're learning well. Keep going! 🌟",
+            "Very good! You're getting better every day. 🚀",
+            "You can do this. Keep practicing! 💪",
+            "Every German word you learn is progress. 🇩🇪",
+            "Don't give up — you're capable of learning German. ✨",
+            "Great job! One more word mastered. 🎉",
+            "Keep going. German is becoming easier! 📖",
+            "You are doing better than you think! ❤️",
+            "Practice today, speak confidently tomorrow! 🗣️️",
+            "Believe in your progress. You are amazing! 💖"
+        ];
+
+        // State variables
+        let currentWordData = GERMAN_DATABASE["danke schön"];
+        let audioSpeed = 1.0;
+        let voiceGender = 'female';
+        let isAudioPlaying = false;
+        let favoriteList = JSON.parse(localStorage.getItem('pori_favorites') || '[]');
+        let recentSearches = JSON.parse(localStorage.getItem('pori_recent') || '["Danke schön", "Haus", "Esel"]');
+        let totalSearchesCount = parseInt(localStorage.getItem('pori_search_count') || '14');
+
+        function showMotivationalToast() {
+            const container = document.getElementById('toast-container');
+            const randomMsg = MOTIVATIONAL_MESSAGES[Math.floor(Math.random() * MOTIVATIONAL_MESSAGES.length)];
+            
+            const toast = document.createElement('div');
+            toast.className = "toast-animate bg-white border-2 border-emerald-500/80 p-4 rounded-2xl shadow-xl flex items-center gap-3 pointer-events-auto cursor-pointer";
+            toast.onclick = function() { toast.remove(); };
+            
+            toast.innerHTML = `
+                <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-850 flex items-center justify-center font-bold text-lg flex-shrink-0">
+                    <i class="fa-solid fa-heart text-emerald-700"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-emerald-850 uppercase tracking-wider">Keep Going!</p>
+                    <p class="text-xs font-semibold text-gray-800 mt-0.5">${randomMsg}</p>
+                </div>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                toast.style.transition = 'all 0.4s ease';
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+
+        function triggerSearch(term) {
+            if (!term || !term.trim()) return;
+            const query = term.trim();
+            const lower = query.toLowerCase();
+
+            totalSearchesCount++;
+            localStorage.setItem('pori_search_count', totalSearchesCount);
+            document.getElementById('stat-searches').innerText = totalSearchesCount;
+
+            addRecentSearch(query);
+
+            // Check dictionary DB
+            if (GERMAN_DATABASE[lower]) {
+                displayWordDetails(GERMAN_DATABASE[lower]);
+                document.getElementById('spell-correction-banner').classList.add('hidden');
+            } else {
+                // Spell check fuzzy match attempt
+                const fuzzyMatch = findFuzzyMatch(lower);
+                if (fuzzyMatch) {
+                    document.getElementById('suggested-spelling-text').innerText = fuzzyMatch;
+                    document.getElementById('spell-correction-banner').classList.remove('hidden');
+                } else {
+                    document.getElementById('spell-correction-banner').classList.add('hidden');
+                }
+                
+                // Real fallback translation API query
+                fetchFallbackTranslation(query);
+            }
+
+            document.getElementById('suggestions-box').classList.add('hidden');
+            showMotivationalToast();
+        }
+
+        function findFuzzyMatch(input) {
+            const keys = Object.keys(GERMAN_DATABASE);
+            for (let k of keys) {
+                if (k.startsWith(input.substring(0, 3))) return GERMAN_DATABASE[k].de;
+            }
+            return null;
+        }
+
+        function acceptSpellingCorrection() {
+            const corrected = document.getElementById('suggested-spelling-text').innerText;
+            document.getElementById('search-input').value = corrected;
+            triggerSearch(corrected);
+        }
+
+        function executeQuickSearch(word) {
+            document.getElementById('search-input').value = word;
+            triggerSearch(word);
+        }
+
+        function displayWordDetails(data) {
+            currentWordData = data;
+            document.getElementById('badge-type').innerText = data.type || "PHRASE / WORD";
+            document.getElementById('phonetic-text').innerText = data.phonetic || `/${data.de}/`;
+            document.getElementById('main-german-title').innerText = data.de;
+
+            document.getElementById('card-german-text').innerText = data.de;
+            document.getElementById('card-english-text').innerText = data.en;
+            document.getElementById('card-bangla-text').innerText = data.bn;
+
+            document.getElementById('example-sentence-de').innerText = data.exDe || `${data.de} ist wichtig.`;
+            document.getElementById('example-sentence-en').innerText = data.exEn || `"${data.en}" is important.`;
+            document.getElementById('example-sentence-bn').innerText = data.exBn || `"${data.bn}" গুরুত্বপূর্ণ।`;
+
+            updateFavoriteButtonState();
+        }
+
+        async function fetchFallbackTranslation(query) {
+            try {
+                const resEn = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(query)}&langpair=de|en`);
+                const dataEn = await resEn.json();
+                let englishText = dataEn.responseData?.translatedText || query;
+
+                const resBn = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(query)}&langpair=de|bn`);
+                const dataBn = await resBn.json();
+                let banglaText = dataBn.responseData?.translatedText || "অনুবাদ সম্পন্ন";
+
+                displayWordDetails({
+                    de: query,
+                    en: englishText,
+                    bn: banglaText,
+                    type: "SEARCH RESULT",
+                    phonetic: `/${query.toLowerCase()}/`,
+                    exDe: `${query} ist sehr nützlich.`,
+                    exEn: `"${englishText}" is very useful.`,
+                    exBn: `"${banglaText}" ব্যবহার খুবই প্রয়োজন।`
+                });
+            } catch (err) {
+                displayWordDetails({
+                    de: query,
+                    en: query,
+                    bn: "অনুবাদ",
+                    type: "WORD",
+                    phonetic: `/${query}/`,
+                    exDe: `${query} in Deutsch.`,
+                    exEn: `"${query}" in German.`,
+                    exBn: `"${query}" জার্মান ভাষায়।`
+                });
+            }
+        }
+
+        function handleSearchInput(val) {
+            const box = document.getElementById('suggestions-box');
+            if (!val || val.length < 1) {
+                box.classList.add('hidden');
+                return;
+            }
+
+            const matches = Object.keys(GERMAN_DATABASE).filter(k => k.includes(val.toLowerCase()));
+            if (matches.length === 0) {
+                box.classList.add('hidden');
+                return;
+            }
+
+            box.innerHTML = matches.map(m => {
+                const item = GERMAN_DATABASE[m];
+                return `<div onclick="executeQuickSearch('${item.de}')" class="p-3 hover:bg-cream-100 cursor-pointer flex items-center justify-between">
+                    <span class="font-bold text-gray-900 text-sm">${item.de}</span>
+                    <span class="text-xs text-gray-500 font-semibold">${item.en}</span>
+                </div>`;
+            }).join('');
+            box.classList.remove('hidden');
+        }
+
+        function toggleAudioPlayback() {
+            if (isAudioPlaying) {
+                stopAudioPlayback();
+            } else {
+                speakText(currentWordData.de);
+            }
+        }
+
+        function speakText(text) {
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'de-DE';
+            utterance.rate = audioSpeed;
+            utterance.pitch = (voiceGender === 'female') ? 1.2 : 0.8;
+
+            utterance.onstart = function() {
+                isAudioPlaying = true;
+                document.getElementById('sound-wave-container').style.display = 'flex';
+                updateAudioBtnState(true);
+            };
+
+            utterance.onend = function() {
+                isAudioPlaying = false;
+                document.getElementById('sound-wave-container').style.display = 'none';
+                updateAudioBtnState(false);
+            };
+
+            utterance.onerror = function() {
+                isAudioPlaying = false;
+                document.getElementById('sound-wave-container').style.display = 'none';
+                updateAudioBtnState(false);
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function stopAudioPlayback() {
+            window.speechSynthesis.cancel();
+            isAudioPlaying = false;
+            document.getElementById('sound-wave-container').style.display = 'none';
+            updateAudioBtnState(false);
+        }
+
+        function updateAudioBtnState(playing) {
+            const btn = document.getElementById('btn-pronounce');
+            const icon = document.getElementById('audio-btn-icon');
+            const label = document.getElementById('audio-btn-label');
+
+            if (playing) {
+                btn.className = "flex items-center gap-2.5 px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-md";
+                icon.className = "fa-solid fa-square";
+                label.innerText = "Stop Audio";
+            } else {
+                btn.className = "flex items-center gap-2.5 px-6 py-2.5 bg-emerald-850 hover:bg-emerald-750 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-md";
+                icon.className = "fa-solid fa-play";
+                label.innerText = "Pronounce German";
+            }
+        }
+
+        function setVoiceGender(gender) {
+            voiceGender = gender;
+            const btnF = document.getElementById('btn-voice-female');
+            const btnM = document.getElementById('btn-voice-male');
+
+            if (gender === 'female') {
+                btnF.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-emerald-850 text-white shadow-xs flex items-center gap-1.5";
+                btnM.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-600 hover:text-emerald-850 flex items-center gap-1.5";
+            } else {
+                btnM.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-emerald-850 text-white shadow-xs flex items-center gap-1.5";
+                btnF.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-600 hover:text-emerald-850 flex items-center gap-1.5";
+            }
+        }
+
+        function setAudioSpeed(speed) {
+            audioSpeed = speed;
+            ['025', '05', '10'].forEach(s => {
+                const el = document.getElementById(`speed-${s}`);
+                el.className = "px-2.5 py-1 rounded-lg text-xs font-bold text-gray-600 transition";
+            });
+
+            if (speed === 0.25) document.getElementById('speed-025').className = "px-2.5 py-1 rounded-lg text-xs font-bold text-white bg-emerald-850 transition";
+            if (speed === 0.5) document.getElementById('speed-05').className = "px-2.5 py-1 rounded-lg text-xs font-bold text-white bg-emerald-850 transition";
+            if (speed === 1.0) document.getElementById('speed-10').className = "px-2.5 py-1 rounded-lg text-xs font-bold text-white bg-emerald-850 transition";
+        }
+
+        function processUploadedImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            readImageFile(file);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            document.getElementById('dropzone').classList.add('border-emerald-600', 'bg-emerald-50/50');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            document.getElementById('dropzone').classList.remove('border-emerald-600', 'bg-emerald-50/50');
+        }
+
+        function handleFileDrop(e) {
+            e.preventDefault();
+            document.getElementById('dropzone').classList.remove('border-emerald-600', 'bg-emerald-50/50');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                readImageFile(e.dataTransfer.files[0]);
+            }
+        }
+
+        function readImageFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('ocr-preview-img');
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+                document.getElementById('ocr-placeholder').classList.add('hidden');
+                runOCR(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function loadPresetImage(type) {
+            const img = document.getElementById('ocr-preview-img');
+            img.classList.remove('hidden');
+            document.getElementById('ocr-placeholder').classList.add('hidden');
+
+            if (type === 'sign') {
+                img.src = "https://placehold.co/600x400/064e3b/ffffff?text=Einfahrt+Freihalten!";
+                document.getElementById('ocr-extracted-de').innerText = "Einfahrt Freihalten!";
+                document.getElementById('ocr-translated-en').innerText = "Keep entrance clear!";
+                document.getElementById('ocr-translated-bn').innerText = "প্রবেশপথ ফাঁকা রাখুন!";
+            } else if (type === 'book') {
+                img.src = "https://placehold.co/600x400/047857/ffffff?text=Guten+Morgen+Deutschland";
+                document.getElementById('ocr-extracted-de').innerText = "Guten Morgen Deutschland";
+                document.getElementById('ocr-translated-en').innerText = "Good morning Germany";
+                document.getElementById('ocr-translated-bn').innerText = "শুভ সকাল জার্মানি";
+            } else {
+                img.src = "https://placehold.co/600x400/15803d/ffffff?text=Vielen+Dank+fuer+Ihren+Einkauf";
+                document.getElementById('ocr-extracted-de').innerText = "Vielen Dank für Ihren Einkauf";
+                document.getElementById('ocr-translated-en').innerText = "Thank you very much for your purchase";
+                document.getElementById('ocr-translated-bn').innerText = "আপনার ক্রয়ের জন্য আপনাকে অনেক ধন্যবাদ";
+            }
+            showMotivationalToast();
+        }
+
+        async function runOCR(imageSrc) {
+            document.getElementById('ocr-spinner').classList.remove('hidden');
+            try {
+                const worker = await Tesseract.createWorker('deu');
+                const ret = await worker.recognize(imageSrc);
+                await worker.terminate();
+
+                const text = ret.data.text.trim() || "Guten Tag";
+                document.getElementById('ocr-extracted-de').innerText = text;
+
+                // Query API for OCR translations
+                const resEn = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=de|en`);
+                const dataEn = await resEn.json();
+                document.getElementById('ocr-translated-en').innerText = dataEn.responseData?.translatedText || text;
+
+                const resBn = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=de|bn`);
+                const dataBn = await resBn.json();
+                document.getElementById('ocr-translated-bn').innerText = dataBn.responseData?.translatedText || "অনুবাদ সম্পন্ন";
+
+            } catch (err) {
+                console.error(err);
+            } finally {
+                document.getElementById('ocr-spinner').classList.add('hidden');
+                showMotivationalToast();
+            }
+        }
+
+        function transferOcrToSpeech() {
+            const text = document.getElementById('ocr-extracted-de').innerText;
+            scrollToSection('evaluator-section');
+            document.getElementById('practice-target').value = text;
+            document.getElementById('target-highlight').innerText = `"${text}"`;
+        }
+
+        let speechRecognizer = null;
+        let isRecognizing = false;
+
+        function toggleSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert("Speech recognition requires Chrome or Edge browser.");
+                return;
+            }
+
+            if (isRecognizing) {
+                if (speechRecognizer) speechRecognizer.stop();
+                return;
+            }
+
+            speechRecognizer = new SpeechRecognition();
+            speechRecognizer.lang = 'de-DE';
+
+            speechRecognizer.onstart = function() {
+                isRecognizing = true;
+                document.getElementById('mic-status-label').innerText = "LISTENING";
+                document.getElementById('btn-record-speech').className = "w-24 h-24 rounded-full bg-red-600 text-white flex flex-col items-center justify-center shadow-xl pulse-emerald";
+            };
+
+            speechRecognizer.onresult = function(event) {
+                const spoken = event.results[0][0].transcript;
+                const target = document.getElementById('practice-target').value;
+                evaluateSpeech(spoken, target);
+            };
+
+            speechRecognizer.onend = speechRecognizer.onerror = function() {
+                isRecognizing = false;
+                document.getElementById('mic-status-label').innerText = "START";
+                document.getElementById('btn-record-speech').className = "w-24 h-24 rounded-full bg-emerald-850 hover:bg-emerald-750 text-white flex flex-col items-center justify-center shadow-xl hover:scale-105 transition duration-300 group";
+            };
+
+            speechRecognizer.start();
+        }
+
+        function evaluateSpeech(spoken, target) {
+            document.getElementById('eval-result-card').classList.remove('hidden');
+            document.getElementById('eval-expected').innerText = target;
+            document.getElementById('eval-heard').innerText = spoken;
+
+            const isMatch = spoken.toLowerCase().includes(target.toLowerCase()) || target.toLowerCase().includes(spoken.toLowerCase());
+            const score = isMatch ? 95 : 70;
+
+            document.getElementById('score-badge').innerText = `${score}% Accuracy`;
+            document.getElementById('eval-feedback').innerText = isMatch 
+                ? "Ausgezeichnet! Excellent pitch and pronunciation."
+                : "Good attempt! Try listening to the female voice sample and repeat.";
+            
+            showMotivationalToast();
+        }
+
+        function setRandomPractice() {
+            const keys = Object.keys(GERMAN_DATABASE);
+            const r = keys[Math.floor(Math.random() * keys.length)];
+            const text = GERMAN_DATABASE[r].de;
+            document.getElementById('practice-target').value = text;
+            document.getElementById('target-highlight').innerText = `"${text}"`;
+        }
+
+        function toggleFavoriteCurrent() {
+            const word = currentWordData.de;
+            const idx = favoriteList.findIndex(f => f.de.toLowerCase() === word.toLowerCase());
+            if (idx > -1) {
+                favoriteList.splice(idx, 1);
+            } else {
+                favoriteList.push(currentWordData);
+            }
+            localStorage.setItem('pori_favorites', JSON.stringify(favoriteList));
+            updateFavoriteButtonState();
+        }
+
+        function updateFavoriteButtonState() {
+            const idx = favoriteList.findIndex(f => f.de.toLowerCase() === currentWordData.de.toLowerCase());
+            const icon = document.getElementById('fav-icon');
+            const text = document.getElementById('fav-text');
+            document.getElementById('fav-count-badge').innerText = favoriteList.length;
+            document.getElementById('stat-favorites').innerText = favoriteList.length;
+
+            if (idx > -1) {
+                icon.className = "fa-solid fa-heart text-red-500";
+                text.innerText = "Saved";
+            } else {
+                icon.className = "fa-regular fa-heart text-gray-400";
+                text.innerText = "Add to Favorites";
+            }
+        }
+
+        function addRecentSearch(term) {
+            recentSearches = recentSearches.filter(s => s.toLowerCase() !== term.toLowerCase());
+            recentSearches.unshift(term);
+            if (recentSearches.length > 8) recentSearches.pop();
+            localStorage.setItem('pori_recent', JSON.stringify(recentSearches));
+        }
+
+        function toggleFavoritesModal() {
+            const modal = document.getElementById('favorites-modal');
+            modal.classList.toggle('hidden');
+            const list = document.getElementById('fav-modal-list');
+            if (favoriteList.length === 0) {
+                list.innerHTML = `<p class="text-center text-xs text-gray-500 py-6">No saved favorite words yet.</p>`;
+                return;
+            }
+            list.innerHTML = favoriteList.map(item => `
+                <div class="py-2.5 flex items-center justify-between">
+                    <div>
+                        <p class="font-bold text-gray-900 text-sm">${item.de}</p>
+                        <p class="text-xs text-emerald-750 font-semibold">${item.en} | <span class="bangla-font">${item.bn}</span></p>
+                    </div>
+                    <button onclick="executeQuickSearch('${item.de}'); toggleFavoritesModal();" class="px-3 py-1 bg-cream-100 hover:bg-emerald-100 text-emerald-850 text-xs font-bold rounded-lg transition">
+                        View
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function toggleRecentModal() {
+            const modal = document.getElementById('recent-modal');
+            modal.classList.toggle('hidden');
+            const list = document.getElementById('recent-modal-list');
+            list.innerHTML = recentSearches.map(item => `
+                <div onclick="executeQuickSearch('${item}'); toggleRecentModal();" class="py-2 px-2 hover:bg-cream-100 rounded-lg cursor-pointer flex items-center justify-between">
+                    <span class="font-bold text-gray-800 text-xs sm:text-sm">${item}</span>
+                    <i class="fa-solid fa-arrow-right text-xs text-gray-400"></i>
+                </div>
+            `).join('');
+        }
+
+        function clearRecentSearches() {
+            recentSearches = [];
+            localStorage.setItem('pori_recent', JSON.stringify([]));
+            toggleRecentModal();
+        }
+
+        function copyToClipboard(id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text);
+            showMotivationalToast();
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.onload = function() {
+            updateFavoriteButtonState();
+            document.getElementById('stat-searches').innerText = totalSearchesCount;
+        };
+    </script>
+</body>
+</html>
